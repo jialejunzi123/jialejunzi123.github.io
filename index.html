@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>jialejunzi — 张嘉乐</title>
+<meta name="description" content="张嘉乐 · 北京科技大学物联网工程 · 嵌入式 / FPGA / 全栈小项目">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%230e0f13'/%3E%3Cpath d='M9 22V10h4v5h6v-5h4v12h-4v-5h-6v5z' fill='%23f2a341'/%3E%3C/svg%3E">
+<style>
+  :root{
+    --bg:#0e0f13;
+    --panel:#16181d;
+    --panel-2:#1b1e24;
+    --border:#262a32;
+    --text:#e7e9ed;
+    --muted:#98a0ac;
+    --faint:#6b7280;
+    --accent:#f2a341;
+    --accent-soft:rgba(242,163,65,.12);
+    --mono:ui-monospace,"Cascadia Code","JetBrains Mono",Consolas,"Liberation Mono",monospace;
+    --sans:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    background:var(--bg);color:var(--text);font-family:var(--sans);
+    line-height:1.65;font-size:16px;
+    -webkit-font-smoothing:antialiased;
+  }
+  a{color:inherit;text-decoration:none}
+  .wrap{max-width:1020px;margin:0 auto;padding:0 24px}
+
+  header{
+    position:sticky;top:0;z-index:10;
+    background:rgba(14,15,19,.85);backdrop-filter:blur(8px);
+    border-bottom:1px solid var(--border);
+  }
+  .nav{display:flex;align-items:center;justify-content:space-between;height:56px}
+  .logo{font-family:var(--mono);font-weight:700;font-size:15px;letter-spacing:.5px}
+  .logo .at{color:var(--accent)}
+  .nav-links{display:flex;gap:22px;font-size:14px;color:var(--muted)}
+  .nav-links a:hover{color:var(--text)}
+  .nav-links .gh{display:inline-flex;align-items:center;gap:6px}
+
+  .hero{padding:88px 0 56px}
+  .prompt{font-family:var(--mono);color:var(--accent);font-size:14px;margin-bottom:18px}
+  .prompt::before{content:"$ "}
+  h1{
+    font-size:clamp(40px,7vw,68px);line-height:1.05;font-weight:800;
+    letter-spacing:-.02em;margin-bottom:18px;
+  }
+  h1 .han{color:var(--text)}
+  h1 .en{
+    display:block;font-family:var(--mono);font-weight:500;
+    font-size:clamp(16px,2.4vw,22px);color:var(--muted);margin-top:14px;letter-spacing:0;
+  }
+  .bio{max-width:620px;color:var(--muted);font-size:16px;margin-bottom:36px}
+  .bio strong{color:var(--text);font-weight:600}
+
+  .chips{display:flex;flex-wrap:wrap;gap:8px}
+  .chip{
+    font-family:var(--mono);font-size:12.5px;color:var(--muted);
+    border:1px solid var(--border);border-radius:999px;padding:4px 12px;
+    background:var(--panel);
+  }
+  .chip b{color:var(--accent);font-weight:600}
+
+  .section{padding:40px 0 20px}
+  .sec-head{display:flex;align-items:baseline;gap:14px;margin-bottom:24px}
+  .sec-head h2{font-size:20px;font-weight:700}
+  .sec-head .count{font-family:var(--mono);color:var(--faint);font-size:13px}
+  .sec-head .line{flex:1;height:1px;background:var(--border)}
+
+  .grid{display:grid;grid-template-columns:1fr;gap:14px}
+  @media(min-width:720px){.grid{grid-template-columns:1fr 1fr}}
+  .card{
+    display:flex;flex-direction:column;gap:10px;
+    background:var(--panel);border:1px solid var(--border);
+    border-radius:10px;padding:20px;
+    transition:border-color .15s,transform .15s;
+  }
+  .card:hover{border-color:#3a4150;transform:translateY(-2px)}
+  .card-top{display:flex;align-items:center;justify-content:space-between;gap:10px}
+  .repo-name{
+    font-family:var(--mono);font-size:15px;font-weight:600;color:var(--accent);
+    display:inline-flex;align-items:center;gap:7px;min-width:0;
+  }
+  .repo-name .ext{width:12px;height:12px;flex:none;opacity:.6}
+  .stars{font-family:var(--mono);font-size:12px;color:var(--faint);display:inline-flex;align-items:center;gap:4px;flex:none}
+  .repo-desc{font-size:14px;color:var(--muted);min-height:44px}
+  .repo-meta{
+    display:flex;align-items:center;gap:14px;flex-wrap:wrap;
+    font-family:var(--mono);font-size:12px;color:var(--faint);
+    margin-top:auto;padding-top:12px;border-top:1px dashed var(--border);
+  }
+  .lang{display:inline-flex;align-items:center;gap:6px}
+  .dot{width:9px;height:9px;border-radius:50%;flex:none}
+  .topics{display:flex;flex-wrap:wrap;gap:6px}
+  .topic{
+    font-family:var(--mono);font-size:11px;color:var(--muted);
+    background:var(--panel-2);border-radius:4px;padding:2px 8px;
+  }
+
+  footer{
+    margin-top:64px;border-top:1px solid var(--border);
+    padding:28px 0 40px;display:flex;justify-content:space-between;
+    flex-wrap:wrap;gap:12px;font-family:var(--mono);font-size:12.5px;color:var(--faint);
+  }
+  footer a{color:var(--muted)}
+  footer a:hover{color:var(--accent)}
+
+  .loading{color:var(--faint);font-family:var(--mono);font-size:14px;padding:20px 0}
+  @media(max-width:600px){
+    .hero{padding:56px 0 32px}
+    .nav-links{gap:14px;font-size:13px}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap nav">
+    <a class="logo" href="/">jialejunzi<span class="at">.xyz</span></a>
+    <nav class="nav-links">
+      <a href="#projects">项目</a>
+      <a class="gh" href="https://github.com/jialejunzi123" target="_blank" rel="noopener">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.7-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.23 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></svg>
+        GitHub
+      </a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="hero">
+    <div class="prompt">whoami</div>
+    <h1>
+      <span class="han">张嘉乐</span>
+      <span class="en">jialejunzi123 · Beijing, China</span>
+    </h1>
+    <p class="bio">
+      北京科技大学 <strong>物联网工程</strong> 在读，平时折腾 FPGA / Verilog / STM32，
+      也写 Python 和前端小工具。这个站点是我 GitHub 公开项目的橱窗——按最近更新排列。
+    </p>
+    <div class="chips">
+      <span class="chip"><b>学校</b>　USTB · 物联网工程</span>
+      <span class="chip"><b>方向</b>　嵌入式 / 计算机组成 / 操作系统</span>
+      <span class="chip"><b>语言</b>　Verilog · Python · C · JS</span>
+    </div>
+  </section>
+
+  <section class="section" id="projects">
+    <div class="sec-head">
+      <h2>Projects</h2>
+      <span class="count" id="repo-count"></span>
+      <span class="line"></span>
+    </div>
+    <div class="grid" id="grid">
+      <div class="loading">// 正在拉取仓库列表…</div>
+    </div>
+  </section>
+</main>
+
+<footer class="wrap">
+  <span>© 2026 jialejunzi · <span id="year"></span></span>
+  <span>
+    <a href="https://github.com/jialejunzi123" target="_blank" rel="noopener">github.com/jialejunzi123</a>
+  </span>
+</footer>
+
+<script>
+var LANG_COLOR = {
+  "Verilog":"#b2b7f8","Python":"#3572A0","JavaScript":"#f1e05a",
+  "HTML":"#e34c26","C":"#555555","C++":"#f34b7d","TypeScript":"#3178c6"
+};
+
+var FALLBACK = [
+  {name:"ustb-cpu-lab", html_url:"https://github.com/jialejunzi123/ustb-cpu-lab",
+   description:"北科大机组课设 · LoongArch32 五级流水 CPU（EXP1–EXP9）",
+   language:"Verilog", stargazers_count:0, pushed_at:"2026-10-21T13:21:07Z",
+   topics:["cpu","fpga","loongarch","pipeline","verilog","vivado","ustb"]},
+  {name:"-", html_url:"https://github.com/jialejunzi123/-",
+   description:"桌面宠物咕咕嘎嘎",
+   language:"JavaScript", stargazers_count:1, pushed_at:"2026-10-22T14:25:16Z",
+   topics:["desktop-pet","fun"]},
+  {name:"cloud-starter-kit", html_url:"https://github.com/jialejunzi123/cloud-starter-kit",
+   description:"Modular AWS prompts for startup teams — security, cost optimization, deployment.",
+   language:"HTML", stargazers_count:1, pushed_at:"2026-06-03T12:09:17Z",
+   topics:["aws","cdk","serverless","terraform","well-architected"]},
+  {name:"ustb-traffic-monitor", html_url:"https://github.com/jialejunzi123/ustb-traffic-monitor",
+   description:"USTB 校园流量监控 Widget",
+   language:"Python", stargazers_count:0, pushed_at:"2026-10-16T13:51:18Z",
+   topics:["ustb","widget","monitor"]},
+  {name:"elderly-ai-companion", html_url:"https://github.com/jialejunzi123/elderly-ai-companion",
+   description:"AI 陪伴老人 MVP：FastAPI 后端 + 管理 Dashboard",
+   language:"Python", stargazers_count:0, pushed_at:"2026-09-22T06:42:07Z",
+   topics:["fastapi","ai","elderly-care"]},
+  {name:"ustb-os-lab-2026", html_url:"https://github.com/jialejunzi123/ustb-os-lab-2026",
+   description:"北科大操作系统实验 2026",
+   language:"C", stargazers_count:0, pushed_at:"2026-05-29T07:56:34Z",
+   topics:["os","lab","ustb"]}
+];
+
+var PRETTY = {"-":"desktop-pet"};
+var DESC_OVERRIDE = {
+  "elderly-ai-companion":"AI 陪伴老人 MVP：FastAPI 后端 + 管理 Dashboard",
+  "ustb-traffic-monitor":"USTB 校园流量监控 Widget"
+};
+
+function esc(s){
+  return String(s==null?"":s).replace(/[&<>"']/g,function(c){
+    return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];
+  });
+}
+
+function relTime(iso){
+  var d = (Date.now() - new Date(iso).getTime())/1000;
+  if(d < 3600) return Math.max(1,Math.round(d/60)) + " 分钟前";
+  if(d < 86400) return Math.round(d/3600) + " 小时前";
+  if(d < 86400*30) return Math.round(d/86400) + " 天前";
+  if(d < 86400*365) return Math.round(d/86400/30) + " 个月前";
+  return Math.round(d/86400/365) + " 年前";
+}
+
+function cleanDesc(s){
+  if(!s) return "暂无描述";
+  return s.replace(/[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}]/gu,"").trim();
+}
+
+function card(r){
+  var pretty = PRETTY[r.name] || r.name;
+  var desc = DESC_OVERRIDE[r.name] || cleanDesc(r.description);
+  var lang = r.language || "—";
+  var color = LANG_COLOR[lang] || "#8b949e";
+  var topics = (r.topics||[]).slice(0,5).map(function(t){
+    return '<span class="topic">'+esc(t)+'</span>';
+  }).join("");
+  return '<a class="card" href="'+esc(r.html_url)+'" target="_blank" rel="noopener">'
+    +'<div class="card-top">'
+    +'<span class="repo-name">'+esc(pretty)
+    +'<svg class="ext" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M3.2 3.2h3.1v1.6H4.8v6.4h6.4V9.7h1.6v3.1c0 .44-.36.8-.8.8H4c-.44 0-.8-.36-.8-.8V4c0-.44.36-.8.8-.8h.8V3.2H3.2Zm4.8 0h4.8v4.8h-1.6V6L7.1 3.9l-1.1 1.1 3.2 3.2-1.1 1.1L4.9 6.1c-.4-.4-.4-1 0-1.4L8 3.2Z"/></svg>'
+    +'</span>'
+    +(r.stargazers_count>0 ? '<span class="stars"><svg width="12" height="12" viewBox="0 0 16 16" fill="currentColor"><path d="M8 .25a.75.75 0 0 1 .673.418l1.882 3.815 4.21.612a.75.75 0 0 1 .416 1.279l-3.046 2.97.719 4.192a.75.75 0 0 1-1.087.791L8 12.347l-3.766 1.98a.75.75 0 0 1-1.088-.79l.72-4.194L.818 6.374a.75.75 0 0 1 .416-1.28l4.21-.611L7.327.668A.75.75 0 0 1 8 .25Z"/></svg>'+r.stargazers_count+'</span>' : '')
+    +'</div>'
+    +'<div class="repo-desc">'+esc(desc)+'</div>'
+    +(topics ? '<div class="topics">'+topics+'</div>' : '')
+    +'<div class="repo-meta">'
+    +'<span class="lang"><span class="dot" style="background:'+color+'"></span>'+esc(lang)+'</span>'
+    +'<span>更新于 '+relTime(r.pushed_at)+'</span>'
+    +'</div>'
+    +'</a>';
+}
+
+function render(list){
+  list = (list||[]).filter(function(r){return !r.fork;})
+    .sort(function(a,b){return new Date(b.pushed_at)-new Date(a.pushed_at);});
+  document.getElementById("repo-count").textContent = "("+list.length+" 个公开仓库)";
+  document.getElementById("grid").innerHTML = list.map(card).join("");
+}
+
+fetch("https://api.github.com/users/jialejunzi123/repos?sort=updated&per_page=100")
+  .then(function(r){ if(!r.ok) throw new Error(r.status); return r.json(); })
+  .then(render)
+  .catch(function(){ render(FALLBACK); });
+
+document.getElementById("year").textContent = new Date().getFullYear();
+</script>
+</body>
+</html>
