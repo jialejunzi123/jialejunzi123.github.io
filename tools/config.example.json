@@ -1,0 +1,19 @@
+{
+  "_comment": "复制成 tools/config.json 使用（config.json 已被 tools/.gitignore 忽略，不会进仓库）。优先级：命令行参数 > 环境变量 > 本文件。CI 里不用这个文件，直接配 Actions secrets。",
+  "_password": "站点解密密码（网页上输入的那个）。留空或不写 = 明文模式（本地预览可以，生产不要）。",
+  "password": "",
+
+  "_localDir": "坚果云本机同步目录，找 SwashbucklerDiaryBackup_*.zip。不写则默认 %USERPROFILE%/Nutstore/1/SwashbucklerDiary。",
+  "localDir": "C:/Users/jiale/Nutstore/1/SwashbucklerDiary",
+
+  "_includePrivate": "true = 连 Private 日记一起生成（只在本机自看时用）。",
+  "includePrivate": false,
+
+  "_webdav": "可选：本机跑 --webdav 时用。CI 里请用 JIANGUO_USER / JIANGUO_PASS 环境变量。",
+  "webdav": {
+    "url": "https://dav.jianguoyun.com/dav/",
+    "user": "",
+    "pass": "",
+    "dir": "我的坚果云/SwashbucklerDiary"
+  }
+}

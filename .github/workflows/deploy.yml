@@ -1,0 +1,81 @@
+# 构建并发布 https://jialejunzi.xyz
+# 方案 B（diary-contract.md「三·补三」）：日记数据不进仓库，
+# 每次构建时从坚果云 WebDAV 现拉备份 → 生成密文 → 和静态站一起打包成 Pages 产物。
+# 本 workflow 绝不向仓库 commit / push 任何文件。
+
+name: build-and-deploy
+
+on:
+  push:
+    branches: [main]
+  schedule:
+    # 每 2 小时同步一次日记（分钟错开 GitHub 高峰）。坚果云免费版有 WebDAV 请求配额，
+    # 想省配额就把这里改疏一些（例如每 6 小时 "17 */6 * * *"），详见 tools/README.md。
+    - cron: '17 */2 * * *'
+  workflow_dispatch:
+
+# Pages 发布所需权限（contents 只读：本流程不写仓库）
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# 同一时刻只跑一个 Pages 部署，且不打断正在进行的部署
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    name: 组装 _site
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: 检出代码
+        uses: actions/checkout@v4
+
+      - name: 配置 Pages
+        uses: actions/configure-pages@v5
+        with:
+          # 若 Pages 还停在「Deploy from a branch」，这里自动把 Source 切成 GitHub Actions，
+          # 免去手动进 Settings 点选（Lead 追加）。
+          enablement: true
+
+      - name: 安装 Node 24
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          # node:sqlite（读备份里的 db3）需要 Node >= 22.5
+          cache: npm
+          cache-dependency-path: tools/package-lock.json
+
+      - name: 安装依赖
+        working-directory: tools
+        run: npm ci --no-audit --no-fund
+
+      - name: 组装站点（含日记数据）
+        env:
+          JIANGUO_USER: ${{ secrets.JIANGUO_USER }}
+          JIANGUO_PASS: ${{ secrets.JIANGUO_PASS }}
+          DIARY_PASSWORD: ${{ secrets.DIARY_PASSWORD }}
+          DIARY_WEBDAV_DIR: ${{ secrets.DIARY_WEBDAV_DIR }}
+        # 缺 secrets 时本步骤内部降级：跳过日记数据、只发布静态站，退出码仍是 0
+        run: node tools/build-site.mjs --webdav
+
+      - name: 上传 Pages 产物
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+  deploy:
+    name: 发布到 GitHub Pages
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: 部署
+        id: deployment
+        uses: actions/deploy-pages@v4

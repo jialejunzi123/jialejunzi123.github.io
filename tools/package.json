@@ -1,0 +1,18 @@
+{
+  "name": "jialejunzi-diary-tools",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "侠客日记（SwashbucklerDiary）备份 → jialejunzi.xyz 静态站的数据管道：零运行时依赖，只用 Node 内置模块（node:zlib 解 zip、node:sqlite 读 db3、node:crypto 加解密）",
+  "engines": {
+    "node": ">=22.5.0"
+  },
+  "scripts": {
+    "sync": "node sync-diary.mjs --local",
+    "build": "node build-site.mjs --webdav",
+    "build:local": "node build-site.mjs --local",
+    "verify:decrypt": "node verify-decrypt.mjs"
+  },
+  "dependencies": {},
+  "devDependencies": {}
+}

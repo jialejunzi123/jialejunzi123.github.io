@@ -1,0 +1,9 @@
+# 本机私密配置：绝不提交（可能含坚果云应用密码 / 站点解密密码）
+config.json
+config.*.json
+!config.example.json
+
+# 依赖与缓存
+node_modules/
+.npm/
+*.log
