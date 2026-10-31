@@ -109,10 +109,24 @@
   footer a{color:var(--muted)}
   footer a:hover{color:var(--accent)}
 
+  /* 右下角「关于我」悬浮入口 */
+  .about-fab{
+    position:fixed;right:24px;bottom:24px;z-index:20;
+    display:inline-flex;align-items:center;gap:8px;
+    padding:11px 20px;border-radius:999px;
+    font-size:14px;font-weight:700;
+    color:var(--bg);background:var(--accent);
+    box-shadow:0 8px 24px rgba(242,163,61,.35);
+    transition:transform .15s,box-shadow .15s;
+  }
+  .about-fab:hover{transform:translateY(-2px);box-shadow:0 10px 28px rgba(242,163,61,.5)}
+  .about-fab svg{width:15px;height:15px}
+
   .loading{color:var(--faint);font-family:var(--mono);font-size:14px;padding:20px 0}
   @media(max-width:600px){
     .hero{padding:56px 0 32px}
     .nav-links{gap:14px;font-size:13px}
+    .about-fab{right:16px;bottom:16px;padding:10px 16px}
   }
 </style>
 </head>
@@ -168,6 +182,11 @@
     <a href="https://github.com/jialejunzi123" target="_blank" rel="noopener">github.com/jialejunzi123</a>
   </span>
 </footer>
+
+<a class="about-fab" href="/exp-wall/" aria-label="关于我">
+  <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6Zm0 1.5c-2.8 0-5 1.4-5 3.2V14h10v-1.3c0-1.8-2.2-3.2-5-3.2Z"/></svg>
+  关于我
+</a>
 
 <script>
 var LANG_COLOR = {
